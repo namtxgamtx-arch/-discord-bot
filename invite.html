@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Satou — บอท Discord หลายระบบ</title>
+<link rel="icon" href="favicon.gif" type="image/gif">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0F0B16;
+    --panel: #171021;
+    --panel-alt: #1E1629;
+    --pink: #FF6FB0;
+    --violet: #9B7CFF;
+    --teal: #4FD8C5;
+    --text: #F1ECF6;
+    --muted: #9C90AF;
+    --line: #2D2440;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  .mono{ font-family:'JetBrains Mono',monospace; }
+  h1,h2,h3{ font-family:'Space Grotesk',sans-serif; font-weight:600; letter-spacing:-0.01em; }
+
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background:
+      radial-gradient(600px 400px at 15% -5%, rgba(255,111,176,0.10), transparent 60%),
+      radial-gradient(500px 380px at 90% 10%, rgba(155,124,255,0.10), transparent 60%);
+    pointer-events:none; z-index:0;
+  }
+
+  .wrap{ max-width:1100px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 0; border-bottom:1px solid var(--line);
+  }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:700; font-size:1.1rem; }
+  .brand-mark{
+    width:28px; height:28px; border-radius:8px; overflow:hidden;
+    background: linear-gradient(145deg, var(--pink), var(--violet));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono'; font-weight:700; font-size:0.85rem; color:#170F22;
+  }
+  .nav-links{ display:flex; gap:30px; font-size:0.9rem; color:var(--muted); }
+  .nav-links a{ color:var(--muted); text-decoration:none; transition:color .15s; }
+  .nav-links a:hover{ color:var(--text); }
+  @media(max-width:640px){ .nav-links{ display:none; } }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:13px 22px; border-radius:11px; font-weight:600; font-size:0.94rem;
+    text-decoration:none; border:1px solid transparent; cursor:pointer;
+    transition:transform .15s, box-shadow .15s, background .15s;
+  }
+  .btn-primary{ background:linear-gradient(120deg, var(--pink), var(--violet)); color:#170F22; }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 12px 28px rgba(255,111,176,0.28); }
+  .btn-ghost{ background:transparent; color:var(--text); border-color:var(--line); }
+  .btn-ghost:hover{ border-color:#463A63; }
+  .nav-cta{ padding:10px 18px; font-size:0.85rem; }
+
+  /* HERO */
+  .hero{ text-align:center; padding:64px 0 40px; }
+  .mascot-ring{
+    width:172px; height:172px; margin:0 auto 26px;
+    border-radius:50%;
+    background: conic-gradient(from 0deg, var(--pink), var(--violet), var(--teal), var(--pink));
+    padding:4px;
+    animation: spin 6s linear infinite;
+  }
+  @media(prefers-reduced-motion:reduce){ .mascot-ring{ animation:none; } }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .mascot-inner{
+    width:100%; height:100%; border-radius:50%;
+    background:var(--panel);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden; position:relative;
+  }
+  .mascot-inner img{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+  .mascot-fallback{
+    font-family:'JetBrains Mono'; font-size:0.72rem; color:var(--muted);
+    padding:14px; text-align:center; line-height:1.5;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono'; font-size:0.78rem; color:var(--teal);
+    background:rgba(79,216,197,0.08); border:1px solid rgba(79,216,197,0.25);
+    padding:6px 12px; border-radius:20px; margin-bottom:20px;
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--teal); box-shadow:0 0 8px var(--teal); animation:pulse 2s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+  .hero h1{ font-size:clamp(2.1rem,5.5vw,3.2rem); line-height:1.12; margin-bottom:16px; }
+  .hero h1 span{
+    background:linear-gradient(120deg, var(--pink), var(--violet));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero p.lead{ color:var(--muted); font-size:1.05rem; max-width:480px; margin:0 auto 30px; }
+  .cta-row{ display:flex; gap:14px; flex-wrap:wrap; align-items:center; justify-content:center; margin-bottom:30px; }
+  .cta-note{ font-family:'JetBrains Mono'; font-size:0.76rem; color:var(--muted); margin-bottom:44px; }
+
+  /* SYSTEM BADGES */
+  .system-badges{
+    display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
+    padding-bottom:70px; border-bottom:1px solid var(--line); margin-bottom:64px;
+  }
+  .sbadge{
+    font-family:'JetBrains Mono'; font-size:0.8rem;
+    padding:8px 16px; border-radius:20px;
+    background:var(--panel); border:1px solid var(--line); color:var(--muted);
+  }
+
+  /* STATS */
+  .stats{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+    margin-bottom:90px;
+  }
+  @media(max-width:700px){ .stats{ grid-template-columns:repeat(2,1fr); } }
+  .stat{ background:var(--panel); padding:24px 20px; text-align:center; }
+  .stat .num{ font-family:'Space Grotesk'; font-size:1.7rem; font-weight:700; }
+  .stat .lbl{ font-family:'JetBrains Mono'; font-size:0.72rem; color:var(--muted); margin-top:4px; }
+
+  .section-head{ max-width:560px; margin:0 auto 44px; text-align:center; }
+  .section-head h2{ font-size:clamp(1.6rem,3vw,2.1rem); margin-bottom:12px; }
+  .section-head p{ color:var(--muted); }
+
+  /* FEATURES */
+  .features{ padding-bottom:90px; }
+  .feature-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  @media(max-width:700px){ .feature-grid{ grid-template-columns:1fr; } }
+  .feature{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:22px 20px; transition:border-color .15s, transform .15s;
+  }
+  .feature:hover{ border-color:#463A63; transform:translateY(-3px); }
+  .feature .ico{ font-size:1.4rem; margin-bottom:12px; display:block; }
+  .feature h3{ font-size:0.98rem; margin-bottom:6px; }
+  .feature p{ color:var(--muted); font-size:0.85rem; }
+
+  /* TICKER */
+  .ticker-wrap{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:14px 0; margin-bottom:90px; overflow:hidden; position:relative;
+  }
+  .ticker-wrap::before, .ticker-wrap::after{
+    content:""; position:absolute; top:0; bottom:0; width:60px; z-index:2;
+  }
+  .ticker-wrap::before{ left:0; background:linear-gradient(90deg, var(--panel), transparent); }
+  .ticker-wrap::after{ right:0; background:linear-gradient(-90deg, var(--panel), transparent); }
+  .ticker{
+    display:flex; gap:36px; white-space:nowrap;
+    animation: scroll 22s linear infinite;
+    font-family:'JetBrains Mono'; font-size:0.82rem; color:var(--muted);
+  }
+  @keyframes scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  @media(prefers-reduced-motion:reduce){ .ticker{ animation:none; } }
+
+  /* FINAL CTA */
+  .final-cta{
+    background:var(--panel); border:1px solid var(--line); border-radius:18px;
+    padding:56px 36px; text-align:center; margin-bottom:80px; position:relative; overflow:hidden;
+  }
+  .final-cta::before{
+    content:""; position:absolute; width:380px; height:380px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,111,176,0.14), transparent 70%);
+    top:-190px; left:50%; transform:translateX(-50%);
+  }
+  .final-cta h2{ font-size:clamp(1.5rem,3vw,2rem); margin-bottom:10px; position:relative; }
+  .final-cta p{ color:var(--muted); margin-bottom:26px; position:relative; }
+
+  footer{
+    border-top:1px solid var(--line); padding:28px 0; text-align:center;
+    color:var(--muted); font-size:0.8rem; font-family:'JetBrains Mono';
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <div class="brand"><div class="brand-mark">S</div>Satou</div>
+    <div class="nav-links">
+      <a href="#features">ระบบทั้งหมด</a>
+      <a href="#invite">เชิญบอท</a>
+    </div>
+    <a href="#invite" class="btn btn-primary nav-cta">เชิญบอท</a>
+  </nav>
+
+  <section class="hero">
+    <div class="mascot-ring">
+      <div class="mascot-inner">
+        <!-- แทนที่ src ด้วยไฟล์รูป/gif มาสคอตของคุณ ที่อัปโหลดคู่กับไฟล์นี้ -->
+        <img src="mascot.gif" alt="มาสคอตบอท"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="mascot-fallback" style="display:flex; align-items:center; justify-content:center;">
+          วางไฟล์ mascot.gif<br>ไว้ที่เดียวกับหน้านี้
+        </div>
+      </div>
+    </div>
+
+    <div class="eyebrow"><span class="dot"></span>ออนไลน์ 24/7 · ดูแลเซิร์ฟเวอร์ครบวงจร</div>
+    <h1>บอทเดียว <span>ดูแลครบ</span><br>ตั้งแต่ต้อนรับถึงแก้ปัญหา</h1>
+    <p class="lead">Satou ดูแลความปลอดภัยเซิร์ฟเวอร์ ต้อนรับสมาชิกใหม่ และจัดการทิกเก็ตแจ้งปัญหา ครบในตัวเดียว</p>
+    <div class="cta-row">
+      <a href="#invite" class="btn btn-primary">เชิญ Satou เข้าเซิร์ฟเวอร์</a>
+      <a href="#features" class="btn btn-ghost">ดูระบบทั้งหมด</a>
+    </div>
+    <div class="cta-note">ไม่ต้องใช้บัตรเครดิต · ตั้งค่าเสร็จใน 2 นาที</div>
+
+    <div class="system-badges">
+      <span class="sbadge">🛡️ ดูแลเซิร์ฟเวอร์</span>
+      <span class="sbadge">👋 ต้อนรับสมาชิก</span>
+      <span class="sbadge">🎟️ ทิกเก็ต</span>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><div class="num">3</div><div class="lbl">ระบบในตัวเดียว</div></div>
+    <div class="stat"><div class="num">2,140+</div><div class="lbl">เซิร์ฟเวอร์ที่ใช้งาน</div></div>
+    <div class="stat"><div class="num">&lt;300ms</div><div class="lbl">เวลาตอบสนอง</div></div>
+    <div class="stat"><div class="num">99.9%</div><div class="lbl">อัปไทม์</div></div>
+  </div>
+
+  <section class="features" id="features">
+    <div class="section-head">
+      <h2>ทุกระบบที่เซิร์ฟเวอร์ต้องใช้ อยู่ในบอทเดียว</h2>
+      <p>เปิดใช้เฉพาะระบบที่ต้องการได้ ไม่กระทบส่วนอื่น</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature">
+        <span class="ico">🛡️</span>
+        <h3>ดูแลเซิร์ฟเวอร์</h3>
+        <p>กรองสแปม ป้องกัน raid เตือน มิวต์ แบน พร้อมบันทึกทุกการกระทำ</p>
+      </div>
+      <div class="feature">
+        <span class="ico">👋</span>
+        <h3>ต้อนรับสมาชิก</h3>
+        <p>ข้อความต้อนรับ ตั้งค่ายศอัตโนมัติ และยืนยันตัวตนก่อนเข้าเซิร์ฟเวอร์</p>
+      </div>
+      <div class="feature">
+        <span class="ico">🎟️</span>
+        <h3>ทิกเก็ต</h3>
+        <p>เปิดห้องแจ้งปัญหาส่วนตัวระหว่างสมาชิกกับทีมงาน ปิดเคสเป็นระเบียบ</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker-wrap">
+    <div class="ticker" id="ticker"></div>
+  </div>
+
+  <div class="final-cta" id="invite">
+    <h2>พร้อมให้ Satou ดูแลเซิร์ฟเวอร์แล้วหรือยัง?</h2>
+    <p>เชิญเข้าเซิร์ฟเวอร์ เลือกเปิดเฉพาะระบบที่ต้องการ แล้วปล่อยให้ทำงานได้เลย</p>
+    <a href="#" class="btn btn-primary">เชิญ Satou เข้าเซิร์ฟเวอร์</a>
+  </div>
+
+  <footer>Satou — บอท Discord ดูแลเซิร์ฟเวอร์ของคุณ</footer>
+</div>
+
+<script>
+  const events = [
+    '🛡️ แบน @raid_bot_017 อัตโนมัติ',
+    '👋 ต้อนรับสมาชิกใหม่ 6 คน',
+    '🎟️ เปิดทิกเก็ตใหม่ #0231',
+    '🛡️ ลบข้อความสแปม 4 รายการ',
+    '👋 ตั้งค่ายศอัตโนมัติให้สมาชิกใหม่',
+    '🎟️ ปิดทิกเก็ต #0228 เรียบร้อย'
+  ];
+  const t = document.getElementById('ticker');
+  const items = [...events, ...events];
+  items.forEach(txt => {
+    const span = document.createElement('span');
+    span.textContent = txt;
+    t.appendChild(span);
+  });
+</script>
+
+</body>
+</html>
